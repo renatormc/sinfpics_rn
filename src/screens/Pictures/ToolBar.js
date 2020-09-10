@@ -4,12 +4,18 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 class ToolBar extends Component {
 
-  btn = (iconName) => {
+  
+  btn = (params) => {
     return (
       <TouchableOpacity
-        activeOpacity={0.7}
-        style={styles.button}>
-        <Icon style={{}} name={iconName} color="white" size={18} />
+
+        style={styles.button}
+        onPress={params.onPress}>
+        {params.text != undefined
+          ? <Text style={styles.buttonText}>{params.text}</Text>
+          : <></>
+        }
+        <Icon style={styles.buttonIcon} name={params.icon} color="white" size={20} />
       </TouchableOpacity>
     )
   }
@@ -19,7 +25,8 @@ class ToolBar extends Component {
       <View style={styles.container}>
         <Text style={styles.title}>Sinf</Text>
         <View style={styles.buttonContainer}>
-          {this.btn('camera')}
+          {this.btn({ icon: 'trash', text: 'Deletar todos', onPress: this.props.onDeletePress })}
+          {this.btn({ icon: 'camera', onPress: this.props.onCamPress })}
         </View>
 
       </View>
@@ -29,29 +36,48 @@ class ToolBar extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 50,
+    // height: 60,
     backgroundColor: "#0074D9",
     flexDirection: "row",
-    padding: 9
+    flexWrap: "wrap",
+    padding: 5,
+    alignContent: "center"
   },
 
   title: {
-    flex: 1,
     color: "white",
     fontSize: 20
   },
 
   buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    flexWrap: "wrap",
+    flex: 1,
 
   },
 
   button: {
+    marginLeft: 25,
+    flexDirection: "row",
+    alignItems: "center",
+    // backgroundColor: "#39CCCC",
+    // padding: 5,
+    borderRadius: 2,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    elevation: 1
+    // margin: 15
+  },
+
+  buttonIcon: {
 
   },
 
   buttonText: {
     color: "white",
-    margin: 5
+    margin: 5,
+    fontSize: 15
   }
 
 });

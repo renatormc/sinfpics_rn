@@ -5,6 +5,7 @@ import { bottomMenuStyles, listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Button } from "../../components/buttons"
 import FAB from "./FAB"
+// import {takePicture} from "../../services/camera"
 
 
 class Pictures extends Component {
@@ -25,23 +26,19 @@ class Pictures extends Component {
     openBottomSheet() {
 
     }
-
-    takePicture() {
-        alert("Tirar foto")
-    }
-
-    onActionSelected = position => {
-        if (position === 0) { // index of 'Settings'
-            this.takePicture()
-        }
-    }
+   
 
     render() {
         return (
             <View style={{
                 height: "100%"
             }}>
-                <ToolBar/>
+                <ToolBar
+                    onCamPress={()=>{
+                        // this.takePicture('teste')
+                        alert("Camera")
+                    }}
+                />
 
                 <SafeAreaView>
 
@@ -85,9 +82,7 @@ class Pictures extends Component {
                     }}
                 >
                 </RBSheet>
-                <FAB onPress={this.takePicture} />
-
-
+               
             </View>
 
         );

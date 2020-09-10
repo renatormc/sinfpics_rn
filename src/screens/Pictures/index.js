@@ -5,7 +5,7 @@ import { bottomMenuStyles, listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Button } from "../../components/buttons"
 import FAB from "./FAB"
-// import {takePicture} from "../../services/camera"
+import {takePicture} from "../../services/camera"
 
 
 class Pictures extends Component {
@@ -35,8 +35,8 @@ class Pictures extends Component {
             }}>
                 <ToolBar
                     onCamPress={()=>{
-                        // this.takePicture('teste')
-                        alert("Camera")
+                        takePicture('teste')
+                        // alert("Camera")
                     }}
                 />
 

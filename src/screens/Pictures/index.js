@@ -8,6 +8,7 @@ import { savePicture, getPics, clearFolder, deletePicture, renamePicture } from 
 import ImagePicker from 'react-native-image-picker';
 import { Actions } from 'react-native-router-flux'
 import ImageViewer from 'react-native-image-zoom-viewer'
+import prompt from 'react-native-prompt-android'
 
 
 class Pictures extends Component {
@@ -50,7 +51,7 @@ class Pictures extends Component {
             'Deletar todas',
             'Tem certeza de que deseja deletar todas as fotos?',
             [
-              
+
                 {
                     text: 'Não',
                     onPress: () => console.log('Cancel Pressed'),
@@ -122,25 +123,47 @@ class Pictures extends Component {
         } catch (error) {
             alert(error)
         }
-        
+
     }
 
     renamePic = async () => {
         this.RBSheet.close();
-        try {
-            const name = 'H1'
-            const source = await renamePicture(this.state.pics[this.state.selectedPicIndex], name)
-            let pics = this.state.pics
-            pics[this.state.selectedPicIndex] = {
-                source: source,
-                name: name
+        const pic = this.state.pics[this.state.selectedPicIndex]
+        prompt(
+            'Enter password',
+            '',
+            [
+                { text: 'Cancelar', style: 'cancel' },
+                {
+                    text: 'OK',
+                    onPress: async name => {
+                        if(name == pic.name){
+                            return
+                        }
+                        try {
+                            const source = await renamePicture(pic, name)
+                            let pics = this.state.pics
+                            pics[this.state.selectedPicIndex] = {
+                                source: source,
+                                name: name
+                            }
+                            this.setState({
+                                pics: pics
+                            })
+                        } catch (error) {
+                            alert(error)
+                        }
+                    }
+                },
+            ],
+            {
+                type: 'text',
+                cancelable: false,
+                defaultValue: this.state.pics[this.state.selectedPicIndex].name,
+                placeholder: 'Novo nome'
             }
-            this.setState({
-                pics: pics
-            })
-        } catch (error) {
-            alert(error)
-        }
+        );
+
     }
 
     vizualizePic = async () => {
@@ -189,7 +212,7 @@ class Pictures extends Component {
                             <TouchableOpacity
                                 style={listStyle.itemContainer}
                                 delayLongPress={200}
-                                onPress={()=>{
+                                onPress={() => {
                                     this.setState({
                                         selectedPicIndex: index
                                     })

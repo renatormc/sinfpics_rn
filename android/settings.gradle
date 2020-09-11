@@ -1,4 +1,6 @@
 rootProject.name = 'sinfpics_rn'
+include ':react-native-prompt-android'
+project(':react-native-prompt-android').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-prompt-android/android')
 include ':react-native-file-provider'
 project(':react-native-file-provider').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-file-provider/android')
 include ':react-native-file-utils'

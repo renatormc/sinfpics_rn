@@ -18,13 +18,24 @@ const getPics = async () => {
 
 }
 
+const clearFolder = async () =>{
+    let files = await RNFS.readDir(PICS_FOLDER)
+    files.forEach(async (file) => {
+        await RNFS.unlink(file.path)
+    });
+}
+
 async function savePicture(tempPath, name) {
     let fullName = `${name}.jpg`
-    const destPath = `${PICS_FOLDER}/${fullName}`;
-    const exists = await RNFS.exists(destPath)
-    if (exists) {
-        await RNFS.unlink(destPath)
+    let destPath = `${PICS_FOLDER}/${fullName}`
+    let i = 1
+    while (await RNFS.exists(destPath)) {
+        name = `${name}_${i}`
+        fullName = `${name}.jpg`
+        destPath = `${PICS_FOLDER}/${fullName}`;
+        i++
     }
+
     await RNFS.moveFile(tempPath, destPath)
     return {
         name: name,
@@ -93,28 +104,6 @@ async function takePicture(name) {
         }
     })
 
-
-
-    // const response = await getImageFromCamera(async (response) => {
-    //     if (response.error) {
-    //         console.log('ImagePicker Error: ', response.error);
-    //     } else {
-    //         const path = response.path
-    //         const info = await savePicture(path, name)
-    //         return info
-    //     }
-    // })
-    // getImageFromCamera().then(async (response) => {
-    //     if (response.error) {
-    //         console.log('ImagePicker Error: ', response.error);
-    //     } else {
-    //         const path = response.path
-    //         const info = await savePicture(path, name)
-    //         return info
-    //     }
-    // })
-
-
 }
 
-export { savePicture, PICS_FOLDER, getPics }
+export { savePicture, PICS_FOLDER, getPics, clearFolder }

@@ -5,7 +5,8 @@ const bottomMenuStyles = StyleSheet.create({
     container: {
         justifyContent: "flex-start",
         alignContent: "flex-start",
-        flexDirection: "column"
+        flexDirection: "column",
+        paddingBottom: 40
     },
     itemContainer: {
         flexDirection: "row",
@@ -40,7 +41,7 @@ const listStyle = StyleSheet.create({
     itemContainer: {
         margin: 5,
         // flexWrap: 'wrap',
-        width: "45%"
+        width: "30%"
     },
     itemInnerContainer: {
         flexDirection: "column",  

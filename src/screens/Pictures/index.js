@@ -4,8 +4,8 @@ import ToolBar from './ToolBar'
 import { bottomMenuStyles, listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Button } from "../../components/buttons"
-import FAB from "./FAB"
-import { savePicture, getPics } from "../../services/storage_manager"
+import BottomSheet from "./BottomSheet"
+import { savePicture, getPics, clearFolder } from "../../services/storage_manager"
 import ImagePicker from 'react-native-image-picker';
 
 
@@ -27,6 +27,7 @@ class Pictures extends Component {
             // { name: "teste", source: "https://diariodonordeste.verdesmares.com.br/image/contentid/policy:1.2974401:1596714334/Chaves.jpg?f=16x9&$p$f=637b399" }
         ],
         objectName: "C1",
+        selectedPicIndex: -1
 
     }
 
@@ -36,13 +37,17 @@ class Pictures extends Component {
 
     reloadPics = async () => {
         const pics = await getPics()
-        console.log(pics)
         this.setState({
             pics: pics
         })
     }
 
-    async takePicture() {
+    clearFolder = async () => {
+        await clearFolder()
+        this.reloadPics()
+    }
+
+    takePicture = async () => {
         // if (Platform.OS === 'android') {
 
         // }
@@ -82,15 +87,21 @@ class Pictures extends Component {
         });
     }
 
+    deletePic = async () => {
+        alert(`Deletar pic ${this.state.pics[this.state.selectedPicIndex].name}`)
+    }
+
 
     render() {
         return (
             <View style={{
-                height: "100%"
+                height: "100%",
+                paddingBottom: 50
             }}>
                 <ToolBar
-                    onCamPress={() => this.takePicture()}
+                    onCamPress={this.takePicture}
                     onReloadPress={this.reloadPics}
+                    onDeletePress={this.clearFolder}
                 />
                 <TextInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -107,12 +118,15 @@ class Pictures extends Component {
                     <FlatList
                         horizontal={false}
                         data={this.state.pics}
-                        numColumns={2}
-                        renderItem={({ item }) => (
+                        numColumns={3}
+                        renderItem={({ item, index }) => (
                             // <View style={listStyle.itemContainer}>
                             <TouchableOpacity
                                 style={listStyle.itemContainer}
                                 onPress={() => {
+                                    this.setState({
+                                        selectedPicIndex: index
+                                    })
                                     this.RBSheet.open();
                                 }}
                             >
@@ -139,10 +153,12 @@ class Pictures extends Component {
                     customStyles={{
                         container: {
                             justifyContent: "flex-start",
-                            alignItems: "flex-start"
+                            alignItems: "flex-start",
+                            height: 200
                         }
                     }}
                 >
+                    <BottomSheet onDeletePress={this.deletePic} />
                 </RBSheet>
 
             </View>

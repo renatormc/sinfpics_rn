@@ -24,7 +24,7 @@ class ToolBar extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Sinf</Text>
+        <Text style={styles.title}>SinfPics</Text>
         <View style={styles.buttonContainer}>
           {this.btn({ icon: 'delete', onPress: this.props.onDeletePress })}
           {this.btn({ icon: 'reload1', onPress: this.props.onReloadPress })}

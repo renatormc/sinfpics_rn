@@ -3,10 +3,10 @@ import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, View, Text
 import ToolBar from './ToolBar'
 import { bottomMenuStyles, listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
-import { Button } from "../../components/buttons"
 import BottomSheet from "./BottomSheet"
 import { savePicture, getPics, clearFolder } from "../../services/storage_manager"
 import ImagePicker from 'react-native-image-picker';
+import { Actions } from 'react-native-router-flux'
 
 
 class Pictures extends Component {
@@ -88,7 +88,13 @@ class Pictures extends Component {
     }
 
     deletePic = async () => {
+        this.RBSheet.close();
         alert(`Deletar pic ${this.state.pics[this.state.selectedPicIndex].name}`)
+    }
+
+    vizualizePic = async () => {
+        this.RBSheet.close();
+        Actions.viewer({source: this.state.pics[this.state.selectedPicIndex].source})
     }
 
 
@@ -158,7 +164,10 @@ class Pictures extends Component {
                         }
                     }}
                 >
-                    <BottomSheet onDeletePress={this.deletePic} />
+                    <BottomSheet
+                        onDeletePress={this.deletePic}
+                        onVizualizePress={this.vizualizePic}
+                    />
                 </RBSheet>
 
             </View>

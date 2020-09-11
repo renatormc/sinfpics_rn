@@ -1,2 +1,6 @@
 For now, as a workaround, search which file uses the deprecated currentlyFocusedField() that causes the error and try changing it to currentlyFocusedInput(). In my case, changing them in the following file did the trick:
 node_modules/@react-navigation/native/lib/module/createKeyboardAwareNavigator.js
+
+Gerar APK:
+https://reactnative.dev/docs/signed-apk-android
+./gradlew app:assembleRelease

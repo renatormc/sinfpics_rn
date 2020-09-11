@@ -130,7 +130,7 @@ class Pictures extends Component {
         this.RBSheet.close();
         const pic = this.state.pics[this.state.selectedPicIndex]
         prompt(
-            'Enter password',
+            'Novo nome',
             '',
             [
                 { text: 'Cancelar', style: 'cancel' },

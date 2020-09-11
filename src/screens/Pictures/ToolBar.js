@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/AntDesign'
+// import IconA from 'react-native-vector-icons/AntDesign'
 
 class ToolBar extends Component {
 
@@ -25,7 +26,8 @@ class ToolBar extends Component {
       <View style={styles.container}>
         <Text style={styles.title}>Sinf</Text>
         <View style={styles.buttonContainer}>
-          {this.btn({ icon: 'trash', text: 'Deletar todos', onPress: this.props.onDeletePress })}
+          {this.btn({ icon: 'delete', onPress: this.props.onDeletePress })}
+          {this.btn({ icon: 'reload1', onPress: this.props.onReloadPress })}
           {this.btn({ icon: 'camera', onPress: this.props.onCamPress })}
         </View>
 

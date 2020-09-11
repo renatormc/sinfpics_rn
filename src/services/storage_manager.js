@@ -11,34 +11,47 @@ const getPics = async () => {
     files = files.filter((file) => file.isFile())
     return files.map(file => {
         return {
-            name: file.name,
+            name: file.name.replace(/\.[^/.]+$/, ""),
             source: "file://" + file.path + "#" + Math.random()
         }
     })
 
 }
 
-const clearFolder = async () =>{
+const clearFolder = async () => {
     let files = await RNFS.readDir(PICS_FOLDER)
     files.forEach(async (file) => {
         await RNFS.unlink(file.path)
     });
 }
 
+const deletePicture = async (pic) => {
+    const path = pic.source.replace("file://", "").split("#")[0]
+    await RNFS.unlink(path)
+}
+
+
+async function renamePicture(pic, name){
+    const path = pic.source.replace("file://", "").split("#")[0]
+    const info = await savePicture(path, name)
+    return "file://" + info.path + "#" + Math.random()
+}
+
 async function savePicture(tempPath, name) {
-    let fullName = `${name}.jpg`
+    let newName = name
+    let fullName = `${newName}.png`
     let destPath = `${PICS_FOLDER}/${fullName}`
     let i = 1
     while (await RNFS.exists(destPath)) {
-        name = `${name}_${i}`
-        fullName = `${name}.jpg`
+        newName = `${name}_${i}`
+        fullName = `${newName}.png`
         destPath = `${PICS_FOLDER}/${fullName}`;
         i++
     }
 
     await RNFS.moveFile(tempPath, destPath)
     return {
-        name: name,
+        name: newName,
         path: destPath
     }
 }
@@ -106,4 +119,4 @@ async function takePicture(name) {
 
 }
 
-export { savePicture, PICS_FOLDER, getPics, clearFolder }
+export { savePicture, PICS_FOLDER, getPics, clearFolder, deletePicture, renamePicture }

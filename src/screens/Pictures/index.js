@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, View, Text, TextInput } from 'react-native';
+import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, View, Text, TextInput, Modal, Alert } from 'react-native';
 import ToolBar from './ToolBar'
 import { bottomMenuStyles, listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
 import BottomSheet from "./BottomSheet"
-import { savePicture, getPics, clearFolder } from "../../services/storage_manager"
+import { savePicture, getPics, clearFolder, deletePicture, renamePicture } from "../../services/storage_manager"
 import ImagePicker from 'react-native-image-picker';
 import { Actions } from 'react-native-router-flux'
+import ImageViewer from 'react-native-image-zoom-viewer'
 
 
 class Pictures extends Component {
@@ -27,7 +28,9 @@ class Pictures extends Component {
             // { name: "teste", source: "https://diariodonordeste.verdesmares.com.br/image/contentid/policy:1.2974401:1596714334/Chaves.jpg?f=16x9&$p$f=637b399" }
         ],
         objectName: "C1",
-        selectedPicIndex: -1
+        selectedPicIndex: -1,
+        isModalVisible: false,
+        imageModalUrl: ""
 
     }
 
@@ -43,8 +46,27 @@ class Pictures extends Component {
     }
 
     clearFolder = async () => {
-        await clearFolder()
-        this.reloadPics()
+        Alert.alert(
+            'Deletar todas',
+            'Tem certeza de que deseja deletar todas as fotos?',
+            [
+              
+                {
+                    text: 'Não',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'SIM', onPress: async () => {
+                        await clearFolder()
+                        this.reloadPics()
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+
+
     }
 
     takePicture = async () => {
@@ -55,8 +77,8 @@ class Pictures extends Component {
             return
         }
         ImagePicker.launchCamera({
-            title: 'Select Avatar',
-            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            quality: 1,
+            mageFileType: 'png',
             storageOptions: {
                 skipBackup: true,
                 privateDirectory: true
@@ -89,13 +111,50 @@ class Pictures extends Component {
 
     deletePic = async () => {
         this.RBSheet.close();
-        alert(`Deletar pic ${this.state.pics[this.state.selectedPicIndex].name}`)
+        try {
+            await deletePicture(this.state.pics[this.state.selectedPicIndex])
+            let pics = this.state.pics
+            pics.splice(this.state.selectedPicIndex, 1)
+            this.setState({
+                pics: pics,
+                selectedPicIndex: -1
+            })
+        } catch (error) {
+            alert(error)
+        }
+        
+    }
+
+    renamePic = async () => {
+        this.RBSheet.close();
+        try {
+            const name = 'H1'
+            const source = await renamePicture(this.state.pics[this.state.selectedPicIndex], name)
+            let pics = this.state.pics
+            pics[this.state.selectedPicIndex] = {
+                source: source,
+                name: name
+            }
+            this.setState({
+                pics: pics
+            })
+        } catch (error) {
+            alert(error)
+        }
     }
 
     vizualizePic = async () => {
-        this.RBSheet.close();
-        Actions.viewer({source: this.state.pics[this.state.selectedPicIndex].source})
+        this.RBSheet.close()
+        this.setState({
+            imageModalUrl: this.state.pics[this.state.selectedPicIndex].source,
+            isModalVisible: true
+        })
+        // Actions.viewer({ source: this.state.pics[this.state.selectedPicIndex].source })
     }
+
+    // showModalFunction(visible) {
+    //     this.setState({ isModelVisible: false });
+    // }
 
 
     render() {
@@ -129,7 +188,14 @@ class Pictures extends Component {
                             // <View style={listStyle.itemContainer}>
                             <TouchableOpacity
                                 style={listStyle.itemContainer}
-                                onPress={() => {
+                                delayLongPress={200}
+                                onPress={()=>{
+                                    this.setState({
+                                        selectedPicIndex: index
+                                    })
+                                    this.vizualizePic()
+                                }}
+                                onLongPress={() => {
                                     this.setState({
                                         selectedPicIndex: index
                                     })
@@ -150,6 +216,14 @@ class Pictures extends Component {
                     />
 
                 </SafeAreaView>
+                <Modal
+                    visible={this.state.isModalVisible}
+                    transparent={false}
+                    onRequestClose={() => {
+                        this.setState({ isModalVisible: false })
+                    }}>
+                    <ImageViewer imageUrls={[{ url: this.state.imageModalUrl, },]} />
+                </Modal>
                 <RBSheet
                     ref={ref => {
                         this.RBSheet = ref;
@@ -167,6 +241,7 @@ class Pictures extends Component {
                     <BottomSheet
                         onDeletePress={this.deletePic}
                         onVizualizePress={this.vizualizePic}
+                        onRenamePress={this.renamePic}
                     />
                 </RBSheet>
 

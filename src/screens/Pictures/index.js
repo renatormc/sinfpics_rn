@@ -214,9 +214,8 @@ class Pictures extends Component {
                                 delayLongPress={200}
                                 onPress={() => {
                                     this.setState({
-                                        selectedPicIndex: index
-                                    })
-                                    this.vizualizePic()
+                                        selectedPicIndex: index,
+                                    }, this.vizualizePic)
                                 }}
                                 onLongPress={() => {
                                     this.setState({

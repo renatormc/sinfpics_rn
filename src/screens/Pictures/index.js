@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, View, Text, TextInput, Modal, Alert } from 'react-native';
+import { Container, Header, Content, Body, Left, Button, Title, Right, Icon, Form, Item, Label, Input } from 'native-base';
 import ToolBar from './ToolBar'
 import { bottomMenuStyles, listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -75,6 +76,17 @@ class Pictures extends Component {
 
         // }
         if (this.state.objectName == "") {
+            Alert.alert(
+                'Nome vazio',
+                'É necessário definir o nome do objeto.',
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => { }
+                    }
+                ],
+                { cancelable: false }
+            );
             return
         }
         ImagePicker.launchCamera({
@@ -137,7 +149,7 @@ class Pictures extends Component {
                 {
                     text: 'OK',
                     onPress: async name => {
-                        if(name == pic.name){
+                        if (name == pic.name) {
                             return
                         }
                         try {
@@ -179,29 +191,63 @@ class Pictures extends Component {
     //     this.setState({ isModelVisible: false });
     // }
 
-
     render() {
+        // <ToolBar
+        //     onCamPress={this.takePicture}
+        //     onReloadPress={this.reloadPics}
+        //     onDeletePress={this.clearFolder}
+        // />
         return (
-            <View style={{
-                height: "100%",
-                paddingBottom: 50
-            }}>
-                <ToolBar
-                    onCamPress={this.takePicture}
-                    onReloadPress={this.reloadPics}
-                    onDeletePress={this.clearFolder}
-                />
-                <TextInput
-                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                    onChangeText={text => {
-                        this.setState({
-                            objectName: text
-                        })
-                    }}
-                    value={this.state.objectName}
-                />
+            <Container>
+                <Header>
 
-                <SafeAreaView>
+                    <Body>
+                        <Title>SinfPics</Title>
+                    </Body>
+                    <Right>
+                        <Button
+                            onPress={this.clearFolder}
+                            transparent>
+                            <Icon name='trash' />
+                        </Button>
+                        <Button
+                            onPress={this.reloadPics}
+                            transparent>
+                            <Icon type="AntDesign" name='reload1' />
+                        </Button>
+                        <Button
+                            onPress={this.takePicture}
+                            transparent>
+                            <Icon name='camera' />
+                        </Button>
+                    </Right>
+                </Header>
+                <Content>
+                    <Form>
+                        <Item fixedLabel>
+                            <Label>Nome do objeto: </Label>
+                            <Input
+                                value={this.state.objectName}
+                                onChangeText={text => {
+                                    this.setState({
+                                        objectName: text
+                                    })
+                                }}
+
+                            />
+                        </Item>
+                    </Form>
+                    {/* <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={text => {
+                            this.setState({
+                                objectName: text
+                            })
+                        }}
+                        value={this.state.objectName}
+                    /> */}
+
+                    {/* <SafeAreaView> */}
 
                     <FlatList
                         horizontal={false}
@@ -237,37 +283,41 @@ class Pictures extends Component {
                         keyExtractor={(item, index) => index.toString()}
                     />
 
-                </SafeAreaView>
-                <Modal
-                    visible={this.state.isModalVisible}
-                    transparent={false}
-                    onRequestClose={() => {
-                        this.setState({ isModalVisible: false })
-                    }}>
-                    <ImageViewer imageUrls={[{ url: this.state.imageModalUrl, },]} />
-                </Modal>
-                <RBSheet
-                    ref={ref => {
-                        this.RBSheet = ref;
-                    }}
-                    // height={300}
-                    openDuration={250}
-                    customStyles={{
-                        container: {
-                            justifyContent: "flex-start",
-                            alignItems: "flex-start",
-                            height: 200
-                        }
-                    }}
-                >
-                    <BottomSheet
-                        onDeletePress={this.deletePic}
-                        onVizualizePress={this.vizualizePic}
-                        onRenamePress={this.renamePic}
-                    />
-                </RBSheet>
+                    {/* </SafeAreaView> */}
+                    <Modal
+                        visible={this.state.isModalVisible}
+                        transparent={false}
+                        onRequestClose={() => {
+                            this.setState({ isModalVisible: false })
+                        }}>
+                        <ImageViewer imageUrls={[{ url: this.state.imageModalUrl, },]} />
+                    </Modal>
+                    <RBSheet
+                        ref={ref => {
+                            this.RBSheet = ref;
+                        }}
+                        // height={300}
+                        openDuration={250}
+                        customStyles={{
+                            container: {
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start",
+                                height: 200
+                            }
+                        }}
+                    >
+                        <BottomSheet
+                            onDeletePress={this.deletePic}
+                            onVizualizePress={this.vizualizePic}
+                            onRenamePress={this.renamePic}
+                        />
+                    </RBSheet>
 
-            </View>
+                </Content>
+
+            </Container>
+
+
 
         );
     }

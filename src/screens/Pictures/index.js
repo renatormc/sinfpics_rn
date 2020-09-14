@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, View, Text, TextInput, Modal, Alert } from 'react-native';
-import { Container, Header, Content, Body, Left, Button, Title, Right, Icon, Form, Item, Label, Input } from 'native-base';
-import ToolBar from './ToolBar'
+import { FlatList, TouchableOpacity, Image, View, Text, Modal, Alert, SafeAreaView } from 'react-native';
+import { Container, Header, Content, Body, Button, Title, Right, Icon, Form, Item, Label, Input } from 'native-base';
 import { bottomMenuStyles, listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
 import BottomSheet from "./BottomSheet"
 import { savePicture, getPics, clearFolder, deletePicture, renamePicture } from "../../services/storage_manager"
 import ImagePicker from 'react-native-image-picker';
-import { Actions } from 'react-native-router-flux'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import prompt from 'react-native-prompt-android'
 
@@ -64,9 +62,6 @@ class Pictures extends Component {
     }
 
     takePicture = async () => {
-        // if (Platform.OS === 'android') {
-
-        // }
         if (this.state.objectName == "") {
             Alert.alert(
                 'Nome vazio',
@@ -83,7 +78,6 @@ class Pictures extends Component {
         }
         ImagePicker.launchCamera({
             quality: 1,
-            mageFileType: 'png',
             storageOptions: {
                 skipBackup: true,
                 privateDirectory: true
@@ -176,19 +170,9 @@ class Pictures extends Component {
             imageModalUrl: this.state.pics[this.state.selectedPicIndex].source,
             isModalVisible: true
         })
-        // Actions.viewer({ source: this.state.pics[this.state.selectedPicIndex].source })
     }
 
-    // showModalFunction(visible) {
-    //     this.setState({ isModelVisible: false });
-    // }
-
     render() {
-        // <ToolBar
-        //     onCamPress={this.takePicture}
-        //     onReloadPress={this.reloadPics}
-        //     onDeletePress={this.clearFolder}
-        // />
         return (
             <Container>
                 <Header>
@@ -229,51 +213,41 @@ class Pictures extends Component {
                             />
                         </Item>
                     </Form>
-                    {/* <TextInput
-                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                        onChangeText={text => {
-                            this.setState({
-                                objectName: text
-                            })
-                        }}
-                        value={this.state.objectName}
-                    /> */}
+                    <SafeAreaView>
+                        <FlatList
+                            horizontal={false}
+                            data={this.state.pics}
+                            numColumns={3}
+                            renderItem={({ item, index }) => (
+                                // <View style={listStyle.itemContainer}>
+                                <TouchableOpacity
+                                    style={listStyle.itemContainer}
+                                    delayLongPress={200}
+                                    onPress={() => {
+                                        this.setState({
+                                            selectedPicIndex: index,
+                                        }, this.vizualizePic)
+                                    }}
+                                    onLongPress={() => {
+                                        this.setState({
+                                            selectedPicIndex: index
+                                        })
+                                        this.RBSheet.open();
+                                    }}
+                                >
+                                    <View style={listStyle.itemInnerContainer}>
+                                        <Image
+                                            style={listStyle.picture}
+                                            source={{ uri: item.source }} />
+                                        <Text>{item.name}</Text>
+                                    </View>
 
-                    {/* <SafeAreaView> */}
-
-                    <FlatList
-                        horizontal={false}
-                        data={this.state.pics}
-                        numColumns={3}
-                        renderItem={({ item, index }) => (
-                            // <View style={listStyle.itemContainer}>
-                            <TouchableOpacity
-                                style={listStyle.itemContainer}
-                                delayLongPress={200}
-                                onPress={() => {
-                                    this.setState({
-                                        selectedPicIndex: index,
-                                    }, this.vizualizePic)
-                                }}
-                                onLongPress={() => {
-                                    this.setState({
-                                        selectedPicIndex: index
-                                    })
-                                    this.RBSheet.open();
-                                }}
-                            >
-                                <View style={listStyle.itemInnerContainer}>
-                                    <Image
-                                        style={listStyle.picture}
-                                        source={{ uri: item.source }} />
-                                    <Text>{item.name}</Text>
-                                </View>
-
-                            </TouchableOpacity>
-                            // </View>
-                        )}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
+                                </TouchableOpacity>
+                                // </View>
+                            )}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </SafeAreaView>
 
                     {/* </SafeAreaView> */}
                     <Modal
@@ -304,19 +278,11 @@ class Pictures extends Component {
                             onRenamePress={this.renamePic}
                         />
                     </RBSheet>
-
                 </Content>
-
             </Container>
-
-
-
         );
     }
 }
 
-// const styles = StyleSheet.create({
-
-// });
 
 export default Pictures;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FlatList, TouchableOpacity, Image, View, Text, Modal, Alert, SafeAreaView } from 'react-native';
 import { Container, Header, Content, Body, Button, Title, Right, Icon, Form, Item, Label, Input } from 'native-base';
-import { bottomMenuStyles, listStyle } from './style'
+import { listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
 import BottomSheet from "./BottomSheet"
 import { savePicture, getPics, clearFolder, deletePicture, renamePicture } from "../../services/storage_manager"

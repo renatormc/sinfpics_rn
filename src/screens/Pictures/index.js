@@ -256,7 +256,12 @@ class Pictures extends Component {
                         onRequestClose={() => {
                             this.setState({ isModalVisible: false })
                         }}>
-                        <ImageViewer imageUrls={[{ url: this.state.imageModalUrl, },]} />
+                        {/* <ImageViewer imageUrls={[{ url: this.state.imageModalUrl, },]} /> */}
+                        <ImageViewer imageUrls={this.state.pics.map(pic => {
+                            return { url: pic.source }
+                        })}
+                            index={this.selectedPicIndex}
+                        />
                     </Modal>
                     <RBSheet
                         ref={ref => {

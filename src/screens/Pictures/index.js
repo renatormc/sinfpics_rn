@@ -4,10 +4,12 @@ import { Container, Header, Content, Body, Button, Title, Right, Icon, Form, Ite
 import { listStyle } from './style'
 import RBSheet from "react-native-raw-bottom-sheet";
 import BottomSheet from "./BottomSheet"
-import { savePicture, getPics, clearFolder, deletePicture, renamePicture } from "../../services/storage_manager"
+import { savePicture, getPics, clearFolder, deletePicture, renamePicture, PICS_FOLDER } from "../../services/storage_manager"
 import ImagePicker from 'react-native-image-picker';
 import ImageViewer from 'react-native-image-zoom-viewer'
 import prompt from 'react-native-prompt-android'
+import { zip } from 'react-native-zip-archive'
+import { DocumentDirectoryPath } from 'react-native-fs'
 
 
 class Pictures extends Component {
@@ -172,6 +174,29 @@ class Pictures extends Component {
         })
     }
 
+    zipPics = async () => {
+        console.log("Upload de pics")
+        const targetPath = `${DocumentDirectoryPath}/myFile.zip`
+
+        zip(PICS_FOLDER, targetPath)
+            .then((path) => {
+                Alert.alert(
+                    'Upload',
+                    'Upload efetuado.',
+                    [
+                        {
+                            text: 'OK',
+                            onPress: () => { }
+                        }
+                    ],
+                    { cancelable: false }
+                );
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     render() {
         return (
             <Container>
@@ -181,6 +206,11 @@ class Pictures extends Component {
                         <Title>SinfPics</Title>
                     </Body>
                     <Right>
+                        <Button
+                            onPress={this.zipPics}
+                            transparent>
+                            <Icon name='cloud-upload' />
+                        </Button>
                         <Button
                             onPress={this.clearFolder}
                             transparent>

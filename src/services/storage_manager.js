@@ -3,6 +3,7 @@ import * as RNFS from 'react-native-fs';
 import { PermissionsAndroid } from "react-native";
 import RNFU from 'react-native-file-utils';
 
+
 const PICS_FOLDER = `${RNFU.PicturesDirectoryPath}/sinfpics`
 // const PICS_FOLDER = `/storage/emulated/0/sinfpics`
 
@@ -32,7 +33,7 @@ const deletePicture = async (pic) => {
 }
 
 
-async function renamePicture(pic, name){
+async function renamePicture(pic, name) {
     const path = pic.source.replace("file://", "").split("#")[0]
     const info = await savePicture(path, name)
     return "file://" + info.path + "#" + Math.random()
@@ -64,6 +65,8 @@ const prepareFolder = async () => {
         await RNFS.mkdir(PICS_FOLDER)
     }
 }
+
+
 
 
 export { savePicture, PICS_FOLDER, getPics, clearFolder, deletePicture, renamePicture, prepareFolder }

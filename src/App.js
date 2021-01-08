@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Pictures from './screens/Pictures'
 import PicViewer from './screens/PicViewer'
+import ScanScreen from './screens/ScanScreen'
 import Test from './screens/Test';
 import {prepareFolder} from './services/storage_manager'
 
@@ -27,6 +28,11 @@ class App extends Component{
             key="viewer"
             component={PicViewer}
             title="Foto"
+          />
+          <Scene
+            key="scan_screen"
+            component={ScanScreen}
+            title="Scan Screen"
           />
         </Scene>
       </Router>

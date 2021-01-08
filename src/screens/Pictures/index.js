@@ -10,6 +10,7 @@ import ImageViewer from 'react-native-image-zoom-viewer'
 import prompt from 'react-native-prompt-android'
 import { zip } from 'react-native-zip-archive'
 import { DocumentDirectoryPath } from 'react-native-fs'
+import { Actions } from 'react-native-router-flux'
 
 
 class Pictures extends Component {
@@ -175,6 +176,8 @@ class Pictures extends Component {
     }
 
     zipPics = async () => {
+        Actions.scab_screen()
+        return
         console.log("Upload de pics")
         const targetPath = `${DocumentDirectoryPath}/myFile.zip`
 
